@@ -11,11 +11,12 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -25,16 +26,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private UserService userService;
     @Autowired
     private ModelMapper modelMapper;
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(
-            "/img/**",
-            "/css/**")
-            .addResourceLocations(
-                "classpath:/static/img/",
-                "classpath:/static/css/");
-    }
 
     /**
      * Method for configuring message source.
@@ -95,5 +86,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new UserArgumentResolver(userService, modelMapper));
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins(
+                "http://localhost:4200",
+                "http://192.168.100.40:4200")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true);
     }
 }
