@@ -147,15 +147,35 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendVerificationEmail(Long id, String name, String email, String token, String language,
         boolean isUbs) {
+
+        log.info("📧 Начало отправки письма с верификацией");
+        log.info("📧 Параметры: id={}, name={}, email={}, token={}, language={}, isUbs={}", id, name, email, token,
+            language, isUbs);
+        log.info("📧 clientLink (из application.properties) = {}", clientLink);
+
         Map<String, Object> model = new HashMap<>();
         String baseLink = clientLink + "#/" + (isUbs ? "ubs" : "");
+
+        log.info("📧 Сформирован baseLink = {}", baseLink);
+
+        String verifyAddress = baseLink + "?token=" + token + PARAM_USER_ID + id;
+        log.info("📧 Полная ссылка для верификации: {}", verifyAddress);
+
         model.put(EmailConstants.CLIENT_LINK, baseLink);
         model.put(EmailConstants.USER_NAME, name);
-        model.put(EmailConstants.VERIFY_ADDRESS, baseLink + "?token=" + token + PARAM_USER_ID + id);
+        model.put(EmailConstants.VERIFY_ADDRESS, verifyAddress);
+
         changeLocale(language);
         model.put(EmailConstants.IS_UBS, isUbs);
+
         String template = createEmailTemplate(model, EmailConstants.VERIFY_EMAIL_PAGE);
+
+        log.info("📧 Шаблон письма сгенерирован: {}", EmailConstants.VERIFY_EMAIL_PAGE);
+
         sendEmail(email, EmailConstants.VERIFY_EMAIL, template);
+
+        log.info("📧 Письмо с верификацией отправлено на: {}", email);
+
     }
 
     /**
