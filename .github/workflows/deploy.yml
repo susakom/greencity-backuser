@@ -196,6 +196,7 @@ jobs:
                   echo "✅ Загружаем переменные из .add_env_backuser"
                   set -a
                   source .add_env_backuser
+                  source .add_env_frontend
                   set +a
                   # ✅ Проверяем, что переменная есть
                   echo "🚀 Деплой backuser с тегом: $IMAGE_BACKUSER_TAG"
