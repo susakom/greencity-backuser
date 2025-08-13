@@ -67,14 +67,13 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: greencity-backuser
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_BACKUSER_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_BACKUSER_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_BACKUSER_TAG
 
           # 🔥 Создаём временный файл с переменными
-           echo "IMAGE_TAG=$IMAGE_TAG" > .add_env_backuser
-           echo "ECR_REGISTRY=$ECR_REGISTRY" >> .add_env_backuser
+           echo "IMAGE_BACKUSER_TAG=$IMAGE_BACKUSER_TAG" > .add_env_backuser
            echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> .add_env_backuser
       
           # Проверка
@@ -182,7 +181,7 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
         env:
-            IMAGE_TAG: ${{ github.sha }}
+            IMAGE_BACKUSER_TAG: ${{ github.sha }}
 
         with:
           host: ${{ steps.get_instance_info.outputs.ec2_public_dns }}
@@ -199,8 +198,8 @@ jobs:
                   source .add_env_backuser
                   set +a
                   # ✅ Проверяем, что переменная есть
-                  echo "🚀 Деплой backuser с тегом: $IMAGE_TAG"
-                  echo "Тег образа= $IMAGE_TAG"
+                  echo "🚀 Деплой backuser с тегом: $IMAGE_BACKUSER_TAG"
+                  echo "Тег образа= $IMAGE_BACKUSER_TAG"
                   docker-compose up -d 
                   docker images
                   docker ps -a
