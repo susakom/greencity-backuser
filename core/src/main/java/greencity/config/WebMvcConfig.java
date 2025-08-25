@@ -1,3 +1,4 @@
+
 package greencity.config;
 
 import greencity.converters.UserArgumentResolver;
@@ -88,14 +89,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(new UserArgumentResolver(userService, modelMapper));
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-            .allowedOrigins(
-                "http://localhost:4200",
-                "http://192.168.100.40:4200")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .allowedHeaders("*")
-            .allowCredentials(true);
-    }
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     registry.addMapping("/**")
+    //         .allowedOrigins(
+    //             "http://localhost:4200",
+    //             "http://192.168.100.40:4200")
+    //         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+    //         .allowedHeaders("*")
+    //         .allowCredentials(true);
+    // }
 }
